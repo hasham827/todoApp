@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:provider/provider.dart';
 import '../../commons/widgets/auth_base_widget.dart';
 import '../../commons/widgets/buttons/custom_text_button.dart';
@@ -21,73 +22,78 @@ class LoginPage extends StatelessWidget {
 
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
-      child: Scaffold(
-        extendBodyBehindAppBar: true,
-        extendBody: true,
-        backgroundColor: AppColors.kPrimaryColor,
-        /// body
-        body: Container(
-          decoration: const BoxDecoration(
-            gradient: AppColors.kBorderGradient
-          ),
-          child: AuthBaseWidget(
-            titleText: AppStrings.login,
-            subTitleText: AppStrings.enterYourLoginDetailsHere,
-            child: Form(
-              key: provider.formKey,
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    /// email field
-                    SizedBox(height: height(context) * 0.1),
-                    CustomTextField(
-                      heading: AppStrings.username,
-                      controller: provider.usernameController,
-                      hintText: AppStrings.enterYourName,
-                      validator: AppValidations().validateUserName,
-                    ),
-
-                    /// pass field
-                    CustomTextField(
-                      heading: AppStrings.password,
-                      controller: provider.passwordController,
-                      hintText: AppStrings.enterYourPassword,
-                      isObscure: provider.isPassObscure,
-                      suffixIcon: IconButton(
-                        onPressed: () {
-                          provider.passObscureFun();
-                        },
-                        icon: FaIcon(
-                          provider.isPassObscure
-                              ? FontAwesomeIcons.eyeSlash
-                              : FontAwesomeIcons.eye,
-                          color: AppColors.kSecondaryColor,
-                        ),
+      child: ModalProgressHUD(
+        inAsyncCall: provider.loading,
+        progressIndicator: const Center(child: CircularProgressIndicator()
+        ),
+        child: Scaffold(
+          extendBodyBehindAppBar: true,
+          extendBody: true,
+          backgroundColor: AppColors.kPrimaryColor,
+          /// body
+          body: Container(
+            decoration: const BoxDecoration(
+              gradient: AppColors.kBorderGradient
+            ),
+            child: AuthBaseWidget(
+              titleText: AppStrings.login,
+              subTitleText: AppStrings.enterYourLoginDetailsHere,
+              child: Form(
+                key: provider.formKey,
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      /// email field
+                      SizedBox(height: height(context) * 0.1),
+                      CustomTextField(
+                        heading: AppStrings.username,
+                        controller: provider.usernameController,
+                        hintText: AppStrings.enterYourName,
+                        validator: AppValidations().validateUserName,
                       ),
-                      outerBottomPadding: kPadding8,
-                      validator: AppValidations().validatePassword,
-                    ),
 
-                    /// forgot password
-                    // const ForgotPassButton(),
+                      /// pass field
+                      CustomTextField(
+                        heading: AppStrings.password,
+                        controller: provider.passwordController,
+                        hintText: AppStrings.enterYourPassword,
+                        isObscure: provider.isPassObscure,
+                        suffixIcon: IconButton(
+                          onPressed: () {
+                            provider.passObscureFun();
+                          },
+                          icon: FaIcon(
+                            provider.isPassObscure
+                                ? FontAwesomeIcons.eyeSlash
+                                : FontAwesomeIcons.eye,
+                            color: AppColors.kSecondaryColor,
+                          ),
+                        ),
+                        outerBottomPadding: kPadding8,
+                        validator: AppValidations().validatePassword,
+                      ),
 
-                    /// login button
-                    SizedBox(height: height(context) * 0.03),
-                    CustomTextButton(
-                      onTap: () {
-                        provider.onLogin();
-                      },
-                      buttonText: AppStrings.login,
-                      buttonHeight: 50,
-                      buttonWidth: width(context),
-                    ),
+                      /// forgot password
+                      // const ForgotPassButton(),
 
-                    /// don't have an account
-                    SizedBox(height: height(context) * 0.01),
-                    // const DontHaveAccount(),
-                  ],
+                      /// login button
+                      SizedBox(height: height(context) * 0.03),
+                      CustomTextButton(
+                        onTap: () {
+                          provider.onLogin();
+                        },
+                        buttonText: AppStrings.login,
+                        buttonHeight: 50,
+                        buttonWidth: width(context),
+                      ),
+
+                      /// don't have an account
+                      SizedBox(height: height(context) * 0.01),
+                      // const DontHaveAccount(),
+                    ],
+                  ),
                 ),
               ),
             ),
